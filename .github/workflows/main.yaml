@@ -1,3 +1,4 @@
+cat >.github/workflows/main.yaml<<EOF
 name: Terraform                               # workflow name
 
 on:
@@ -6,25 +7,14 @@ on:
       - main
 
 jobs:
-  terrascan:
-    runs-on: ubuntu-20.04
+  build:
+    runs-on: ubuntu-20.04                    # similar to "image" in GitLab
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Run Terrascan
-        id: terrascan
-        uses: accurics/terrascan-action@v1
-        with:
-          iac_type: 'terraform'
-          iac_version: 'v14'
-          policy_type: 'aws'
-          only_warn: true
-          iac_dir: 'aws'
+      - run: echo "This is a build step"
 
   test:
     runs-on: ubuntu-20.04
-    needs: terrascan
+    needs: build
     steps:
       - run: echo "This is a test step"
 
@@ -41,3 +31,4 @@ jobs:
     needs: integration
     steps:
       - run: echo "This is a deploy step"
+EOF
